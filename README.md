@@ -1,72 +1,85 @@
-# TVMaze Show Summary
+﻿# TVMaze Show Summary — Lab 04
 
 ## Overview
 
-This Python project downloads TV show records from the TVMaze API and generates summary statistics. It demonstrates modular Python development, data validation, object-oriented programming, aggregation, automated testing, and package installation.
+This project is a Python package that retrieves TV show records from the TVMaze API, validates and cleans the records, calculates summary statistics, and writes JSON reports.
+
+Lab 04 focuses on package hardening, configuration validation, error handling, logging, reproducible sampling, automated tests, type checking, and code quality.
 
 ## Features
 
-* Downloads TV show records from TVMaze.
-* Validates and cleans show data.
-* Counts shows by genre.
-* Calculates average ratings by language.
-* Counts shows by premiere decade.
-* Lists unique genres.
-* Saves the summary as formatted JSON.
-* Handles download and data errors with clear messages.
-* Includes network-free unit tests.
+- Loads application settings from `config/tvsummary.toml`.
+- Retrieves TV show records from the configured TVMaze endpoint.
+- Validates API responses and normalizes show data.
+- Calculates show counts by genre and premiere decade.
+- Calculates average ratings by language.
+- Lists unique genres.
+- Selects featured shows reproducibly using a configured random seed.
+- Writes `summary.json` and `run_info.json` to the configured output folder.
+- Uses custom exceptions and clear command-line error messages.
+- Includes offline automated tests, static type checking, and Ruff linting.
 
 ## Project Structure
 
 ```text
-week03-lab03/
+.
+├── config/
+│   └── tvsummary.toml
 ├── data/
 │   ├── raw/
 │   │   └── .gitkeep
 │   └── processed/
-│       └── summary.json
+│       ├── summary.json
+│       └── run_info.json
 ├── src/
 │   └── tvsummary/
 │       ├── __init__.py
-│       ├── config.py
-│       ├── models.py
-│       ├── sources.py
+│       ├── py.typed
 │       ├── aggregations.py
-│       └── report.py
+│       ├── config.py
+│       ├── errors.py
+│       ├── featured.py
+│       ├── logging_setup.py
+│       ├── main.py
+│       ├── models.py
+│       ├── report.py
+│       └── sources.py
 ├── tests/
-│   └── test_aggregations.py
-├── lab2.py
-├── main.py
+│   ├── conftest.py
+│   ├── test_aggregations.py
+│   ├── test_config.py
+│   ├── test_featured.py
+│   ├── test_main.py
+│   ├── test_models.py
+│   └── test_sources.py
+├── .gitignore
 ├── environment.yml
 ├── pyproject.toml
 ├── requirements.txt
-├── .gitignore
 └── README.md
 ```
 
-## Requirements
-
-* Python 3.11
-* pip
-* requests
-
 ## Setup
 
-Create the Conda environment:
+### Requirements
+
+- Python 3.11
+- Conda, or another Python environment manager
+- Internet access to retrieve live TVMaze data
+
+### Create the environment
+
+For a new environment, run:
 
 ```powershell
 conda env create -f environment.yml
-```
-
-Activate the environment:
-
-```powershell
 conda activate tvsummary
 ```
 
-Install dependencies:
+If the `tvsummary` environment already exists, activate it and install the pinned dependencies:
 
 ```powershell
+conda activate tvsummary
 python -m pip install -r requirements.txt
 ```
 
@@ -76,46 +89,130 @@ Install the package in editable mode:
 python -m pip install -e .
 ```
 
-## Run the Application
+## Check it
 
-From the project root, run:
-
-```powershell
-python main.py
-```
-
-The program retrieves TVMaze data and writes the report to `data/processed/summary.json`. Internet access is required to retrieve live data.
-
-## Run Tests
-
-Run the network-free unit tests with:
+Run the offline tests:
 
 ```powershell
-python -m unittest discover -s tests -v
+python -m pytest -v
 ```
 
-The tests verify genre counts, average ratings by language, premiere-decade counts, and unique genres without making API requests.
+Check static types:
 
-## What Moved Where
+```powershell
+python -m mypy src tests
+```
 
-| Original responsibility                             | New module        |
-| --------------------------------------------------- | ----------------- |
-| API URL, timeout, output path                       | `config.py`       |
-| Show data validation and cleaning                   | `models.py`       |
-| API requests and response validation                | `sources.py`      |
-| Genre, rating, decade and unique-genre calculations | `aggregations.py` |
-| Summary assembly and JSON output                    | `report.py`       |
-| Application entry point                             | `main.py`         |
+Check lint rules:
 
-## Design Choices
+```powershell
+python -m ruff check .
+```
 
-* **Separation of concerns:** Configuration, data access, models, calculations, and reporting are separated into modules.
-* **Data validation:** The `Show` model normalizes genres, language, ratings, and premiere dates.
-* **Polymorphism:** Aggregation subclasses implement their own `compute()` methods, called through a common interface.
-* **Testability:** Aggregations are tested with sample data and do not require network access.
-* **Centralized configuration:** The API URL, timeout, and output location are defined in one module.
-* **Dependency management:** `pyproject.toml` defines package metadata and dependencies; `requirements.txt` pins the requests dependency.
+Verify formatting:
 
-## Lab 02 Comparison
+```powershell
+python -m ruff format --check .
+```
 
-The original Lab 02 script is preserved as `lab2.py`. The refactored package retains the same summary categories and JSON output structure while organizing the functionality into separate modules.
+All four checks should pass before submission.
+
+## Run the application
+
+From the project root:
+
+```powershell
+python -m tvsummary.main
+```
+
+To specify a different configuration file:
+
+```powershell
+python -m tvsummary.main --config config/tvsummary.toml
+```
+
+The application uses the configured API URL and timeout, builds the summary, selects featured shows using the configured seed, and writes the output files to the configured output folder.
+
+Expected output files:
+
+- `data/processed/summary.json` — summary statistics and featured shows.
+- `data/processed/run_info.json` — configuration settings, Python version, and available pytest, mypy, and Ruff versions.
+
+Running the application requires network access. The automated tests should not depend on a live API.
+
+## Settings
+
+Edit `config/tvsummary.toml` to change the application settings:
+
+```toml
+[app]
+source_url = "https://api.tvmaze.com/shows?page=0"
+timeout = 15
+output_folder = "data/processed"
+seed = 42
+sample_size = 5
+log_level = "INFO"
+```
+
+| Setting | Purpose |
+| --- | --- |
+| `source_url` | HTTPS endpoint used to retrieve show records |
+| `timeout` | Maximum request wait time, in seconds |
+| `output_folder` | Directory for generated JSON reports |
+| `seed` | Random seed for reproducible featured-show selection |
+| `sample_size` | Number of featured shows to select |
+| `log_level` | Logging level, such as `INFO` or `DEBUG` |
+
+Configuration is validated when the application starts. Missing or invalid settings should produce a clear error rather than an unhandled traceback.
+
+## Errors and exit codes
+
+| Exit code | Meaning |
+| --- | --- |
+| `0` | Application completed successfully |
+| `1` | An expected configuration, data-source, validation, or report-writing error occurred |
+
+Expected application errors are reported with an `Error:` message on standard error. Logs provide additional diagnostic information.
+
+## Reproducing a run
+
+To reproduce the featured-show selection:
+
+1. Keep the same input records.
+2. Keep the same `seed` and `sample_size` values in `config/tvsummary.toml`.
+3. Run the application again.
+4. Compare the featured-show selection in `summary.json`.
+
+The random seed makes sampling reproducible for the same input records and sampling parameters. Live API data can change, so the entire summary may differ between runs.
+
+The `run_info.json` file records settings and environment information to help document each run.
+
+## What tests cover
+
+The test suite covers:
+
+- Cleaning and validation of show records.
+- Aggregation calculations for genres, ratings, decades, and unique genres.
+- Configuration loading and missing configuration errors.
+- Data-source success, request failures, invalid JSON, and malformed API responses.
+- Reproducible featured-show selection.
+- Command-line success and expected error handling.
+
+Tests should use fixtures, temporary paths, and mocks where appropriate so they can run without relying on the live TVMaze API.
+
+## Known limitations
+
+- Live data retrieval requires internet access and depends on TVMaze availability.
+- The default endpoint retrieves one configured page of records; it does not necessarily represent every TVMaze show.
+- Summary statistics reflect the records returned by the endpoint.
+- Reproducibility of the full report depends on receiving the same input records and using the same settings.
+- `run_info.json` records environment information but is not a complete lockfile for every transitive dependency.
+
+## Design choices
+
+- **Separation of concerns:** Configuration, data access, models, aggregation, reporting, and command-line behavior live in separate modules.
+- **Error handling:** Expected failures use package-specific exceptions.
+- **Logging:** Application diagnostics use centralized logging.
+- **Reproducibility:** Featured-show selection uses a dedicated seeded random generator.
+- **Testability:** Automated tests validate behavior without requiring live API calls.
+- **Code quality:** Ruff and mypy help maintain consistent formatting, linting, and type annotations.

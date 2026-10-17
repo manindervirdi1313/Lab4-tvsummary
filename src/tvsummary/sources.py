@@ -1,4 +1,3 @@
-
 """Data sources for TV show records."""
 
 import logging
@@ -33,21 +32,15 @@ class TVMazeSource:
             response.raise_for_status()
             records = response.json()
         except requests.exceptions.RequestException as error:
-            raise DataSourceError(
-                f"Could not download TVMaze data: {error}"
-            ) from error
+            raise DataSourceError(f"Could not download TVMaze data: {error}") from error
         except ValueError as error:
-            raise DataSourceError(
-                f"Could not decode TVMaze JSON: {error}"
-            ) from error
+            raise DataSourceError(f"Could not decode TVMaze JSON: {error}") from error
 
         if not isinstance(records, list):
             raise DataValidationError("The API response is not a list.")
 
         if not all(isinstance(record, dict) for record in records):
-            raise DataValidationError(
-                "The API response contains invalid records."
-            )
+            raise DataValidationError("The API response contains invalid records.")
 
         try:
             shows = [Show(record) for record in records]

@@ -1,4 +1,3 @@
-
 """Load and validate application settings from TOML."""
 
 import logging
@@ -36,17 +35,11 @@ def load_config(config_path: str | Path) -> AppConfig:
         with path.open("rb") as file:
             document = tomllib.load(file)
     except FileNotFoundError as error:
-        raise SettingsError(
-            f"Configuration file not found: {path}"
-        ) from error
+        raise SettingsError(f"Configuration file not found: {path}") from error
     except tomllib.TOMLDecodeError as error:
-        raise SettingsError(
-            f"Invalid TOML configuration: {path}"
-        ) from error
+        raise SettingsError(f"Invalid TOML configuration: {path}") from error
     except OSError as error:
-        raise SettingsError(
-            f"Cannot read configuration file: {path}"
-        ) from error
+        raise SettingsError(f"Cannot read configuration file: {path}") from error
 
     app = document.get("app")
     if not isinstance(app, dict):

@@ -1,4 +1,3 @@
-
 """Data models for TVMaze records."""
 
 
@@ -29,9 +28,7 @@ class Show:
             return []
 
         return [
-            genre.strip()
-            for genre in value
-            if isinstance(genre, str) and genre.strip()
+            genre.strip() for genre in value if isinstance(genre, str) and genre.strip()
         ]
 
     @staticmethod

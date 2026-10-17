@@ -1,4 +1,3 @@
-
 """Exceptions raised by the tvsummary package."""
 
 

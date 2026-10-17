@@ -1,4 +1,3 @@
-
 """Tests for configuration loading."""
 
 import pytest

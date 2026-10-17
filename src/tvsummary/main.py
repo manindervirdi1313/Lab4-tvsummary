@@ -1,4 +1,3 @@
-
 """Command-line entry point for tvsummary."""
 
 import argparse
@@ -15,9 +14,7 @@ logger = logging.getLogger(__name__)
 
 def main(argv: Sequence[str] | None = None) -> int:
     """Load settings and run the application."""
-    parser = argparse.ArgumentParser(
-        description="Generate a TV show summary."
-    )
+    parser = argparse.ArgumentParser(description="Generate a TV show summary.")
     parser.add_argument(
         "--config",
         default="config/tvsummary.toml",

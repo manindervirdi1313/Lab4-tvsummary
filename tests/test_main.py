@@ -1,4 +1,3 @@
-
 """Tests for the command-line entry point."""
 
 from tvsummary.main import main

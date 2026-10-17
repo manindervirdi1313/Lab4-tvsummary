@@ -1,4 +1,3 @@
-
 """Aggregation classes for TV show summary statistics."""
 
 from collections import defaultdict
@@ -76,10 +75,6 @@ class UniqueGenresAggregation(Aggregation):
     """Return all unique genre names."""
 
     def compute(self):
-        genres = {
-            genre
-            for show in self.shows
-            for genre in show.genres
-        }
+        genres = {genre for show in self.shows for genre in show.genres}
 
         return sorted(genres)

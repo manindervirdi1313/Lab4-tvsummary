@@ -1,4 +1,3 @@
-
 """Build and write the TV show summary report."""
 
 import json
@@ -14,11 +13,15 @@ from tvsummary.aggregations import (
 )
 from tvsummary.config import API_URL, OUTPUT_FILE
 from tvsummary.errors import ReportError
+from tvsummary.models import Show
 
 logger = logging.getLogger(__name__)
 
 
-def build_summary(shows: list[Any]) -> dict[str, Any]:
+def build_summary(
+    shows: list[Show],
+    source_url: str = API_URL,
+) -> dict[str, Any]:
     """Build the complete summary without writing a file."""
     aggregations = [
         ("shows_per_genre", GenreAggregation(shows)),
@@ -28,7 +31,7 @@ def build_summary(shows: list[Any]) -> dict[str, Any]:
     ]
 
     summary: dict[str, Any] = {
-        "source_url": API_URL,
+        "source_url": source_url,
         "records_processed": len(shows),
     }
 

@@ -1,4 +1,3 @@
-
 """Build and write the TV show summary report."""
 
 import json

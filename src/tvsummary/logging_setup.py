@@ -1,4 +1,3 @@
-
 """Central logging configuration for tvsummary."""
 
 import logging

@@ -1,4 +1,3 @@
-
 """Deterministic selection of featured TV shows."""
 
 import random

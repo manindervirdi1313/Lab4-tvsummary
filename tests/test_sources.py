@@ -57,9 +57,7 @@ def test_fetch_handles_invalid_json(mock_get: Mock) -> None:
 
 @pytest.mark.parametrize("payload", [{"name": "not a list"}, None, "invalid"])
 @patch("tvsummary.sources.requests.get")
-def test_fetch_rejects_non_list_response(
-    mock_get: Mock, payload: object
-) -> None:
+def test_fetch_rejects_non_list_response(mock_get: Mock, payload: object) -> None:
     """A response that is not a list is rejected."""
     mock_response = Mock()
     mock_response.json.return_value = payload

@@ -1,4 +1,3 @@
-
 """Tests for featured-show selection."""
 
 import pytest

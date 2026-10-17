@@ -45,8 +45,15 @@ def test_genres_are_cleaned(value: object) -> None:
 
 @pytest.mark.parametrize(
     "rating",
-    [None, {}, {"average": None}, {"average": -1}, {"average": 11},
-     {"average": True}, {"average": "8.5"}],
+    [
+        None,
+        {},
+        {"average": None},
+        {"average": -1},
+        {"average": 11},
+        {"average": True},
+        {"average": "8.5"},
+    ],
 )
 def test_invalid_ratings_become_none(rating: object) -> None:
     """Invalid ratings are normalized to None."""

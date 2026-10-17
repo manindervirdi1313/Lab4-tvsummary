@@ -1,4 +1,3 @@
-
 """Data sources for TV show records."""
 
 import json
@@ -33,11 +32,7 @@ class TVMazeSource:
             return [Show(record) for record in records]
 
         except requests.exceptions.RequestException as error:
-            raise RuntimeError(
-                f"Could not download TVMaze data: {error}"
-            ) from error
+            raise RuntimeError(f"Could not download TVMaze data: {error}") from error
 
         except (ValueError, json.JSONDecodeError) as error:
-            raise RuntimeError(
-                f"Could not read valid JSON data: {error}"
-            ) from error
+            raise RuntimeError(f"Could not read valid JSON data: {error}") from error
