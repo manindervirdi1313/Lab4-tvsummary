@@ -1,4 +1,3 @@
-
 """Entry point for the TV show summary application."""
 
 from tvsummary.config import OUTPUT_FILE

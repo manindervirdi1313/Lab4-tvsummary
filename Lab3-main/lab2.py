@@ -1,4 +1,3 @@
-
 """
 TV Show Aggregator
 Downloads TVMaze show records and creates summary statistics.

@@ -1,4 +1,3 @@
-
 """TVMaze show summary package."""
 
 from .aggregations import (

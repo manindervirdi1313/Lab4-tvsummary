@@ -1,4 +1,3 @@
-
 """Central configuration for the TV summary package."""
 
 from pathlib import Path
